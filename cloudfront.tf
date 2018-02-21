@@ -47,23 +47,11 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   enabled = true
 
   price_class  = "PriceClass_200"
-  http_version = "http1.1"
+  http_version = "http2"
 
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.bucket.id}"
     domain_name = "${aws_s3_bucket.bucket.bucket_domain_name}"
-
-    custom_origin_config {
-      http_port              = 80
-      https_port             = 443
-      origin_protocol_policy = "https-only"
-      origin_ssl_protocols   = ["TLSv1", "TLSv1.1", "TLSv1.2"]
-    }
-
-    # custom_header {
-    #   name  = "User-Agent"
-    #   value = "${var.duplicate_content_penalty_secret}"
-    # }
   }
 
   default_root_object = "index.html"
@@ -71,13 +59,13 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   custom_error_response {
     error_code            = "404"
     error_caching_min_ttl = "360"
-    response_code         = "200"
+    response_code         = "${var.custom_error_response_code}"
     response_page_path    = "${var.not_found_response_path}"
   }
 
-  "default_cache_behavior" {
-    allowed_methods = ["GET", "HEAD"]
-    cached_methods  = ["GET", "HEAD"]
+  default_cache_behavior {
+    allowed_methods = ["${var.allowed_methods}"]
+    cached_methods  = ["${var.cached_methods}"]
 
     "forwarded_values" {
       query_string = false
@@ -87,14 +75,16 @@ resource "aws_cloudfront_distribution" "website_cdn" {
       }
     }
 
-    min_ttl          = "0"
-    default_ttl      = "300"                                      //3600
-    max_ttl          = "1200"                                     //86400
+    min_ttl          = "${var.default_cache_behavior_min_ttl}"
+    default_ttl      = "${var.default_cache_behavior_default_ttl}"
+    max_ttl          = "${var.default_cache_behavior_max_ttl}"
     target_origin_id = "origin-bucket-${aws_s3_bucket.bucket.id}"
 
-    // This redirects any HTTP request to HTTPS. Security first!
+    // This redirects any HTTP request to HTTPS.
     viewer_protocol_policy = "redirect-to-https"
     compress               = true
+
+    lambda_function_association = "${var.lambda_function_association}"
   }
 
   "restrictions" {
