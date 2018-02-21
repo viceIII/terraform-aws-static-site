@@ -76,7 +76,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   "default_cache_behavior" {
-    allowed_methods = ["GET", "HEAD", "DELETE", "OPTIONS", "PATCH", "POST", "PUT"]
+    allowed_methods = ["GET", "HEAD"]
     cached_methods  = ["GET", "HEAD"]
 
     "forwarded_values" {
