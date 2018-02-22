@@ -3,34 +3,32 @@ resource "aws_iam_policy" "cloudfront-policy" {
 
   policy = <<EOF
 {
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cloudfront:ListDistributions"
-      ],
-      "Resource": "arn:aws:cloudfront:::*"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cloudfront:GetDistribution",
-        "cloudfront:GetDistributionConfig"
-      ],
-      "Resource": "${aws_cloudfront_distribution.website_cdn.arn}"
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "cloudfront:ListCloudFrontOriginAccessIdentities",
-        "cloudfront:CreateInvalidation",
-        "cloudfront:GetInvalidation",
-        "cloudfront:ListInvalidations"
-      ],
-      "Resource": "${aws_cloudfront_distribution.website_cdn.arn}/*"
-    }
-  ]
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": "cloudfront:ListDistributions",
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudfront:GetDistribution",
+                "cloudfront:GetDistributionConfig"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "cloudfront:ListCloudFrontOriginAccessIdentities",
+                "cloudfront:ListInvalidations",
+                "cloudfront:GetInvalidation",
+                "cloudfront:CreateInvalidation"
+            ],
+            "Resource": "*"
+        }
+    ]
 }
 EOF
 }
