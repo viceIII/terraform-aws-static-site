@@ -55,4 +55,6 @@ resource "aws_s3_bucket" "bucket" {
   tags {
     Name = "${var.site_domain}"
   }
+
+  cors_rule = "${var.cors_rule}"
 }

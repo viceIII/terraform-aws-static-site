@@ -7,6 +7,11 @@ variable "enable_cloudfront" {
 
 variable "acm_certificate_arn" {}
 
+variable "cors_rule" {
+  type    = "list"
+  default = []
+}
+
 variable "default_cache_behavior_min_ttl" {
   default = 0
 }
