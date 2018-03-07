@@ -1,11 +1,12 @@
 variable "site_domain" {}
+variable "bucket_name" {}
 variable "ci_user" {}
 
-variable "enable_cloudfront" {
-  default = false
-}
-
 variable "acm_certificate_arn" {}
+
+variable "bucket_acl" {
+  default = "public-read"
+}
 
 variable "cors_rule" {
   type    = "list"

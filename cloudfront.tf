@@ -40,8 +40,6 @@ resource "aws_iam_user_policy_attachment" "cloudfront-policy-attach" {
 
 // Create a Cloudfront distribution for the static website
 resource "aws_cloudfront_distribution" "website_cdn" {
-  count = "${var.enable_cloudfront ? 1 : 0}"
-
   enabled = true
 
   price_class  = "PriceClass_200"
@@ -50,6 +48,10 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   origin {
     origin_id   = "origin-bucket-${aws_s3_bucket.bucket.id}"
     domain_name = "${aws_s3_bucket.bucket.bucket_domain_name}"
+
+    s3_origin_config {
+      origin_access_identity = "${aws_cloudfront_origin_access_identity.origin_access_identity.cloudfront_access_identity_path}"
+    }
   }
 
   default_root_object = "index.html"

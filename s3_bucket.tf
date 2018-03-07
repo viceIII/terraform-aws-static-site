@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "bucket-policy" {
-  name = "bucket-${var.site_domain}-policy"
+  name = "bucket-${var.bucket_name}-policy"
 
   policy = <<EOF
 {
@@ -36,6 +36,19 @@ resource "aws_iam_policy" "bucket-policy" {
 EOF
 }
 
+resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
+  comment = "${var.bucket_name} access identity"
+}
+
+data "template_file" "bucket_policy" {
+  template = "${file("${path.module}/templates/bucket_policy.tpl")}"
+
+  vars {
+    iam_arn     = "${aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn}"
+    bucket_name = "${var.bucket_name}"
+  }
+}
+
 resource "aws_iam_user_policy_attachment" "bucket-policy-attach" {
   user = "${var.ci_user}"
 
@@ -43,9 +56,10 @@ resource "aws_iam_user_policy_attachment" "bucket-policy-attach" {
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket        = "${var.site_domain}"
-  acl           = "public-read"
+  bucket        = "${var.bucket_name}"
+  acl           = "${var.bucket_acl}"
   force_destroy = true
+  policy        = "${data.template_file.bucket_policy.rendered}"
 
   website {
     index_document = "index.html"
