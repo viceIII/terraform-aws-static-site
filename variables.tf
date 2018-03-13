@@ -1,6 +1,9 @@
 variable "site_domain" {}
 variable "bucket_name" {}
-variable "ci_user" {}
+
+variable "ci_user" {
+  default = ""
+}
 
 variable "acm_certificate_arn" {}
 
@@ -45,7 +48,7 @@ variable "cached_methods" {
 }
 
 variable "not_found_response_path" {
-  default = "/index.html"
+  default = "/404.html"
 }
 
 variable "aliases" {
