@@ -37,7 +37,7 @@ variable "lambda_function_association" {
   default = []
 }
 
-variable "forwarded_heades" {
+variable "forwarded_headers" {
   type    = "list"
   default = []
 }
