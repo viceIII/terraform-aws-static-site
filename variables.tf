@@ -37,6 +37,11 @@ variable "lambda_function_association" {
   default = []
 }
 
+variable "forwarded_heades" {
+  type    = "list"
+  default = []
+}
+
 variable "allowed_methods" {
   type    = "list"
   default = ["GET", "HEAD"]
