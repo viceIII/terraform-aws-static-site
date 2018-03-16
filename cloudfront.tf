@@ -19,8 +19,15 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   custom_error_response {
     error_code            = "404"
     error_caching_min_ttl = "360"
-    response_code         = "${var.custom_error_response_code}"
-    response_page_path    = "${var.not_found_response_path}"
+    response_code         = "${var.custom_not_found_response_code}"
+    response_page_path    = "${var.custom_not_found_response_path}"
+  }
+
+  custom_error_response {
+    error_code            = "403"
+    error_caching_min_ttl = "360"
+    response_code         = "${var.custom_forbidden_response_code}"
+    response_page_path    = "${var.custom_forbidden_response_path}"
   }
 
   default_cache_behavior {

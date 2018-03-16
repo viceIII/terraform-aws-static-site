@@ -32,6 +32,22 @@ variable "custom_error_response_code" {
   default = "404"
 }
 
+variable "custom_not_found_response_code" {
+  default = "404"
+}
+
+variable "custom_not_found_response_path" {
+  default = "/404.html"
+}
+
+variable "custom_forbidden_response_code" {
+  default = "403"
+}
+
+variable "custom_forbidden_response_path" {
+  default = "/403.html"
+}
+
 variable "lambda_function_association" {
   type    = "list"
   default = []
@@ -50,10 +66,6 @@ variable "allowed_methods" {
 variable "cached_methods" {
   type    = "list"
   default = ["GET", "HEAD"]
-}
-
-variable "not_found_response_path" {
-  default = "/404.html"
 }
 
 variable "aliases" {
