@@ -72,3 +72,7 @@ variable "aliases" {
   type    = "list"
   default = []
 }
+
+variable "viewer_protocol_policy" {
+  default = "redirect-to-https"
+}

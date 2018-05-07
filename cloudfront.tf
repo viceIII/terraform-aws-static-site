@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     target_origin_id = "origin-bucket-${aws_s3_bucket.bucket.id}"
 
     // This redirects any HTTP request to HTTPS.
-    viewer_protocol_policy = "redirect-to-https"
+    viewer_protocol_policy = "${var.viewer_protocol_policy}"
     compress               = true
 
     lambda_function_association = "${var.lambda_function_association}"
@@ -63,11 +63,10 @@ resource "aws_cloudfront_distribution" "website_cdn" {
   }
 
   "viewer_certificate" {
-    acm_certificate_arn = "${var.acm_certificate_arn}"
-
+    acm_certificate_arn      = "${var.acm_certificate_arn}"
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1"
   }
 
-  aliases = ["${var.site_domain}", "www.${var.site_domain}", "${compact(var.aliases)}"]
+  aliases = ["${concat(list(var.site_domain), var.aliases)}"]
 }
