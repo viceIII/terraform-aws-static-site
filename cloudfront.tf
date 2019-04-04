@@ -68,5 +68,5 @@ resource "aws_cloudfront_distribution" "website_cdn" {
     minimum_protocol_version = "TLSv1"
   }
 
-  aliases = ["${concat(list(var.site_domain), var.aliases)}"]
+  aliases = ["${var.aliases}"]
 }
