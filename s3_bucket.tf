@@ -34,6 +34,7 @@ resource "aws_iam_policy" "bucket-policy" {
     ]
 }
 EOF
+
 }
 
 resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
@@ -41,28 +42,43 @@ resource "aws_cloudfront_origin_access_identity" "origin_access_identity" {
 }
 
 data "template_file" "bucket_policy" {
-  template = "${file("${path.module}/templates/bucket_policy.tpl")}"
+  template = file("${path.module}/templates/bucket_policy.tpl")
 
-  vars {
-    iam_arn     = "${aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn}"
-    bucket_name = "${var.bucket_name}"
+  vars = {
+    iam_arn     = aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn
+    bucket_name = var.bucket_name
   }
 }
 
 resource "aws_s3_bucket" "bucket" {
-  bucket        = "${var.bucket_name}"
-  acl           = "${var.bucket_acl}"
+  bucket        = var.bucket_name
+  acl           = var.bucket_acl
   force_destroy = true
-  policy        = "${data.template_file.bucket_policy.rendered}"
+  policy        = data.template_file.bucket_policy.rendered
 
   website {
     index_document = "index.html"
     error_document = "index.html"
   }
 
-  tags {
-    Name = "${var.site_domain}"
+  tags = {
+    Name = var.site_domain
   }
 
-  cors_rule = "${var.cors_rule}"
+  dynamic "cors_rule" {
+    for_each = var.cors_rule
+    content {
+      # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
+      # which keys might be set in maps assigned here, so it has
+      # produced a comprehensive set here. Consider simplifying
+      # this after confirming which keys can be set in practice.
+
+      allowed_headers = lookup(cors_rule.value, "allowed_headers", null)
+      allowed_methods = cors_rule.value.allowed_methods
+      allowed_origins = cors_rule.value.allowed_origins
+      expose_headers  = lookup(cors_rule.value, "expose_headers", null)
+      max_age_seconds = lookup(cors_rule.value, "max_age_seconds", null)
+    }
+  }
 }
+

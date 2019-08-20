@@ -1,18 +1,22 @@
-variable "site_domain" {}
-variable "bucket_name" {}
+variable "site_domain" {
+}
+
+variable "bucket_name" {
+}
 
 variable "ci_user" {
   default = ""
 }
 
-variable "acm_certificate_arn" {}
+variable "acm_certificate_arn" {
+}
 
 variable "bucket_acl" {
   default = "public-read"
 }
 
 variable "cors_rule" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
@@ -49,30 +53,31 @@ variable "custom_forbidden_response_path" {
 }
 
 variable "lambda_function_association" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "forwarded_headers" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "allowed_methods" {
-  type    = "list"
+  type    = list(string)
   default = ["GET", "HEAD"]
 }
 
 variable "cached_methods" {
-  type    = "list"
+  type    = list(string)
   default = ["GET", "HEAD"]
 }
 
 variable "aliases" {
-  type    = "list"
+  type    = list(string)
   default = []
 }
 
 variable "viewer_protocol_policy" {
   default = "redirect-to-https"
 }
+
