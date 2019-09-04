@@ -53,7 +53,7 @@ variable "custom_forbidden_response_path" {
 }
 
 variable "lambda_function_association" {
-  type    = list(string)
+  type    = list(map(string))
   default = []
 }
 
